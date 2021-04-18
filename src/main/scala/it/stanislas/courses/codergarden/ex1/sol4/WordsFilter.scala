@@ -13,9 +13,9 @@ class WordsFilter(val minShortestWordLength: Int) {
     WordsFiltered(shortestWords, longestWords)
   }
 
-  private def filterShortest(acc : List[String], word: String) = filter(_ < _, acc, word)
+  private def filterShortest(acc : List[String], word: String) :List[String] = filter(_ < _, acc, word)
 
-  private def filterLongest(acc : List[String], word: String) = filter(_ > _, acc, word)
+  private def filterLongest(acc : List[String], word: String) :List[String] = filter(_ > _, acc, word)
 
   private def filter(comparator: (Int, Int) => Boolean, acc : List[String], word: String) : List[String] = {
     val wordLength = word.length
