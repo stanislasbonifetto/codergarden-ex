@@ -6,8 +6,15 @@ object Application extends App {
   val filterWords = WordsFilter()
   val filteredWords = filterWords.shortestAndLongest(words = argsList)
 
-  println(s"""shortest: ${filteredWords.shortest}""")
-  println(s"""longest: ${filteredWords.longest}""")
+  val shortestWords = filteredWords.shortest.mkString(", ")
+  val longestWords = filteredWords.longest.mkString(", ")
 
+  val shortestWordLength = lengthOfHead(filteredWords.shortest)
+  val longestWordLength = lengthOfHead(filteredWords.longest)
+
+  println(s"""shortest words are length $shortestWordLength: ${shortestWords}""")
+  println(s"""longest words are length $longestWordLength: ${longestWords}""")
+
+  def lengthOfHead(list: List[String]) = list.headOption.getOrElse("").length
 }
 
