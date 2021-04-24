@@ -1,4 +1,4 @@
-package it.stanislas.courses.codergarden.ex1.sol4
+package it.stanislas.courses.codergarden.ex1
 
 class WordsFilter(val minShortestWordLength: Int) {
 

@@ -1,4 +1,4 @@
-package it.stanislas.courses.codergarden.ex1.sol4
+package it.stanislas.courses.codergarden.ex1
 
 object Application extends App {
 
@@ -17,4 +17,3 @@ object Application extends App {
 
   def lengthOfHead(list: List[String]) = list.headOption.getOrElse("").length
 }
-
