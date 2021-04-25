@@ -5,7 +5,7 @@ object Application {
   def main(args: Array[String]): Unit = {
     val argsList = args.toList
     val filterWords = WordsFilter()
-    val filteredWords = filterWords.shortestAndLongest(words = argsList)
+    val filteredWords = filterWords.filterShortestAndLongest(words = argsList)
 
     val shortestWords = filteredWords.shortest.mkString(", ")
     val longestWords = filteredWords.longest.mkString(", ")
