@@ -2,7 +2,7 @@ package it.stanislas.courses.codergarden.ex2
 
 object PrintWordsFilter {
 
-  def print(wordsFiltered: WordsFiltered): Unit = {
+  def buildMessage(wordsFiltered: WordsFiltered): String = {
     val shortestWordsByComma = wordsFiltered.shortest.mkString(", ")
     val longestWordsByComma = wordsFiltered.longest.mkString(", ")
 

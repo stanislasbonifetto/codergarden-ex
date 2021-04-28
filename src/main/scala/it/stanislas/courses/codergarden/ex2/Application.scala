@@ -6,7 +6,8 @@ object Application {
     val argsList = args.toList
     val wordsFilter = WordsFilter()
     val wordsFiltered = wordsFilter.filterShortestAndLongest(words = argsList)
-    PrintWordsFilter.print(wordsFiltered)
+    val resultMessage = PrintWordsFilter.buildMessage(wordsFiltered)
+    println(resultMessage)
   }
 
 }
