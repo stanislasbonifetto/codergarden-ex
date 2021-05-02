@@ -11,20 +11,20 @@ class WordsFilterTest extends AnyFreeSpec {
     "with an empty list" - {
       val wordsFiltered = wordsFilter.filterShortestAndLongest(words = List())
       "shortest empty" in {
-        wordsFiltered.shortest should be (empty)
+        wordsFiltered.shortest.words should be (empty)
       }
       "longest empty" in {
-        wordsFiltered.longest should be (empty)
+        wordsFiltered.longest.words should be (empty)
       }
     }
     "with a list with of words shorter that 2" - {
       val words = List("is", "it", "a", "1", ".")
       val wordsFiltered = wordsFilter.filterShortestAndLongest(words = words)
       "shortest empty" in {
-        wordsFiltered.shortest should be (empty)
+        wordsFiltered.shortest.words should be (empty)
       }
       "longest empty" in {
-        wordsFiltered.longest should be (empty)
+        wordsFiltered.longest.words should be (empty)
       }
     }
 
@@ -32,10 +32,10 @@ class WordsFilterTest extends AnyFreeSpec {
       val words = List("one", "two", "tree", "four")
       val wordsFiltered = wordsFilter.filterShortestAndLongest(words = words)
       """shortest List("two", "one")""" in {
-        wordsFiltered.shortest should contain theSameElementsAs List("one", "two")
+        wordsFiltered.shortest.words should contain theSameElementsAs List("one", "two")
       }
       """longest List("four", "tree")""" in {
-        wordsFiltered.longest should contain theSameElementsAs List("tree", "four")
+        wordsFiltered.longest.words should contain theSameElementsAs List("tree", "four")
       }
     }
   }
