@@ -4,10 +4,10 @@ object CharCounter {
 
   def count(words: Array[String]) : Map[String, Int] =
     words.toSeq
-      .flatMap(streamSingleChar)
+      .flatMap(toLowerSingleChar)
       .groupMapReduce(identity)(_ => 1)(_ + _)
 
-  private def streamSingleChar(word: String) : Seq[String] =
+  private def toLowerSingleChar(word: String) : Seq[String] =
     word.
       toLowerCase
       .split("")
