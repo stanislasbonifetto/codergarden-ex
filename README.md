@@ -17,3 +17,8 @@ print the letter contained in the string + the number of times it appears in the
 i.e. Giorgio ->
 (g, 2), (i, 2), (o, 2) (r, 1)
 [Solution](src/main/scala/it/stanislas/courses/codergarden/ex3)
+
+# Ex-4
+Solve the [Scala_Developer_Interview_Excercise.pdf](Scala_Developer_Interview_Excercise.pdf)
+
+[Solution](src/main/scala/it/stanislas/courses/codergarden/ex4)
