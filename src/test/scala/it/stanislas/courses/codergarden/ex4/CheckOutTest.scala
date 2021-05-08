@@ -6,7 +6,7 @@ import org.scalatest.matchers.should.Matchers
 class CheckOutTest extends AnyFreeSpec with Matchers {
   "A CheckOut calculateTotal" - {
     "and a basket of Apple, Apple, Orange, Apple" - {
-      val basket = List("Apple", "Apple", "Orange", "Apple")
+      val basket = List(Product("Apple"), Product("Apple"), Product("Orange"), Product("Apple"))
       "should return £2.05" in {
         val total = Checkout.calculateTotal(basket)
         total should be (Pound(2.05))
@@ -20,10 +20,17 @@ class CheckOutTest extends AnyFreeSpec with Matchers {
       }
     }
     "and basket with not supported items" - {
-      val basket = List("UnknownItem")
+      val basket = List(Product("UnknownItem"))
       "should return £0" in {
         val total = Checkout.calculateTotal(basket)
         total should be (Pound(0))
+      }
+    }
+    "and basket with Apple, Apple" - {
+      val basket = List(Product("Apple"), Product("Apple"))
+      "should return £0.6" in {
+        val total = Checkout.calculateTotal(basket)
+        total should be (Pound(0.6))
       }
     }
   }
