@@ -5,15 +5,30 @@ import scala.collection.immutable.HashMap
 object Checkout {
   val productPrices: Map[String, Pound] = HashMap(
     "Apple" -> Pound(0.6),
-    "Orange" -> Pound(0.25)
+    "Orange" -> Pound(0.25),
+    "Banana" -> Pound(0.20)
   )
 
   def calculateTotal(basket: List[String]) : Pound = basket match {
     case Nil => Pound(0)
     case basket => {
-      val groupedProduct = basket.groupBy(identity).view.mapValues(_.size)
-      val total = groupedProduct.map{ case(p, q) => calculatePrice(p, q) }.foldLeft(Pound(0))(_ + _)
+      val groupedProduct = basket.groupBy(identity).map{ case(product, items) => (product, items.size) }
+      val groupedProductRemovedBundle = removeBundle(groupedProduct)
+      val total = groupedProductRemovedBundle.map{ case(p, q) => calculatePrice(p, q) }.foldLeft(Pound(0))(_ + _)
       total
+    }
+  }
+
+  private def removeBundle(groupedProducts: Map[String, Int]): Map[String, Int] = {
+    val maybeBananas = groupedProducts.get("Banana")
+    val maybeApples = groupedProducts.get("Apple")
+    (maybeBananas, maybeApples)  match {
+      case (Some(bananas), Some(apples)) => {
+        val bananasToPay = bananas - apples
+        val updatedProducts = groupedProducts + ("Banana" -> bananasToPay)
+          updatedProducts
+      }
+      case _ => groupedProducts
     }
   }
 
@@ -26,15 +41,18 @@ object Checkout {
 
   private def calculateDiscount(product: String, price: Pound, quantity: Int): Pound = {
     product match {
-      case "Apple" => {
-        val quotient : Int = quantity / 2
-        quotient * price
-      }
-      case "Orange" => {
-        val quotient : Int = quantity / 3
-        quotient * price
-      }
+      case "Apple" => discountTwoForOne(price, quantity)
+      case "Banana" => discountTwoForOne(price, quantity)
+      case "Orange" => discountTreeForTwo(price, quantity)
       case _ => Pound(0)
     }
+  }
+  private def discountTwoForOne(price: Pound, quantity: Int): Pound = {
+    val quotient : Int = quantity / 2
+    quotient * price
+  }
+  private def discountTreeForTwo(price: Pound, quantity: Int): Pound = {
+    val quotient : Int = quantity / 3
+    quotient * price
   }
 }

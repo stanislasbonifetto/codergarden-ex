@@ -33,5 +33,40 @@ class CheckOutTest extends AnyFreeSpec with Matchers {
         total should be (Pound(0.6))
       }
     }
+    "and basket with Banana" - {
+      val basket = List("Banana")
+      "should return £0.2" in {
+        val total = Checkout.calculateTotal(basket)
+        total should be (Pound(0.2))
+      }
+    }
+    "and basket with Banana, Banana" - {
+      val basket = List("Banana", "Banana")
+      "should return £0.2" in {
+        val total = Checkout.calculateTotal(basket)
+        total should be (Pound(0.2))
+      }
+    }
+    "and basket with Banana, Banana, Apple" - {
+      val basket = List("Banana", "Banana", "Apple")
+      "should return £0.8" in {
+        val total = Checkout.calculateTotal(basket)
+        total should be (Pound(0.8))
+      }
+    }
+    "and basket with Banana, Banana, Banana, Apple" - {
+      val basket = List("Banana", "Banana", "Banana", "Apple")
+      "should return £0.8" in {
+        val total = Checkout.calculateTotal(basket)
+        total should be (Pound(0.8))
+      }
+    }
+    "and basket with Banana, Banana, Apple, Apple" - {
+      val basket = List("Banana", "Banana", "Apple", "Apple")
+      "should return £0.6" in {
+        val total = Checkout.calculateTotal(basket)
+        total should be (Pound(0.6))
+      }
+    }
   }
 }
