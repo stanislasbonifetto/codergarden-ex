@@ -1,18 +1,23 @@
 package it.stanislas.courses.codergarden.ex4
 
-trait Money{
-  val value : BigDecimal
+import scala.language.implicitConversions
+
+trait Money {
+  val value: BigDecimal
+  val symbol: String
+  def +(that: Money): Money
+  def -(that: Money): Money
+  def *(that: Money): Money
+  def *(that: Int): Money
+  def /(that: Money): Money
+  override def toString: String = s"$symbol$value"
 }
 
 case class Pound(value: BigDecimal) extends Money {
-  def + (that: Pound): Pound = Pound(this.value + that.value)
-  def - (that: Pound): Pound = Pound(this.value - that.value)
-  def * (that: Pound): Pound = Pound(this.value * that.value)
-  def / (that: Pound): Pound = Pound(this.value / that.value)
-  override def toString: String = s"£${super.toString}"
-}
-
-object Pound {
-  implicit def IntToPound(x: Int): Pound = Pound(x)
-  implicit def DoubleToPound(x: Double): Pound = Pound(x)
+  override val symbol: String = "£"
+  def +(that: Money): Money = Pound(this.value + that.value)
+  def -(that: Money): Money = Pound(this.value - that.value)
+  def *(that: Money): Money = Pound(this.value * that.value)
+  def *(that: Int): Money = Pound(this.value * that)
+  def /(that: Money): Money = Pound(this.value / that.value)
 }

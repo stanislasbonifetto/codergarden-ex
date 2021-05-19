@@ -7,9 +7,9 @@ class CheckOutTest extends AnyFreeSpec with Matchers {
   "A CheckOut calculateTotal" - {
     "and a basket of Apple, Apple, Orange, Apple" - {
       val basket = List(Product("Apple"), Product("Apple"), Product("Orange"), Product("Apple"))
-      "should return £2.05" in {
+      "should return £1.45" in {
         val total = Checkout.calculateTotal(basket)
-        total should be (Pound(2.05))
+        total should be (Pound(1.45))
       }
     }
     "and empty basket" - {

@@ -6,7 +6,8 @@ import org.scalatest.matchers.should.Matchers
 class TreeForTwoTest extends AnyFreeSpec with Matchers {
   "A TreeForTwo with price x" - {
     val price = Pound(3.99)
-    val promo = TreeForTwo(price)
+    val productPrice = ProductPrice(Product("A"), price)
+    val promo = TreeForTwo(productPrice)
     "quantity 0" - {
       "discount should be 0" in {
         val discount = promo.calculateDiscount(0)
@@ -40,7 +41,7 @@ class TreeForTwoTest extends AnyFreeSpec with Matchers {
     "quantity 6" - {
       "discount should be 2 * x" in {
         val discount = promo.calculateDiscount(6)
-        discount should be (2 * price)
+        discount should be (price * 2)
       }
     }
   }

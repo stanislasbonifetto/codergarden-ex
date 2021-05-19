@@ -6,7 +6,8 @@ import org.scalatest.matchers.should.Matchers
 class TwoForOneTest extends AnyFreeSpec with Matchers {
   "A TwoForOne with price x" - {
     val price = Pound(3.99)
-    val promo = TwoForOne(price)
+    val productPrice = ProductPrice(Product("A"), price)
+    val promo = TwoForOne(productPrice)
     "quantity 0" - {
       "discount should be 0" in {
         val discount = promo.calculateDiscount(0)
@@ -34,7 +35,7 @@ class TwoForOneTest extends AnyFreeSpec with Matchers {
     "quantity 4" - {
       "discount should be 2 * x" in {
         val discount = promo.calculateDiscount(4)
-        discount should be (2 * price)
+        discount should be (price * 2)
       }
     }
   }
