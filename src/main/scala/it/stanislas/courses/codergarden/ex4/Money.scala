@@ -1,6 +1,10 @@
 package it.stanislas.courses.codergarden.ex4
 
-case class Pound(value: BigDecimal) extends AnyVal {
+trait Money{
+  val value : BigDecimal
+}
+
+case class Pound(value: BigDecimal) extends Money {
   def + (that: Pound): Pound = Pound(this.value + that.value)
   def - (that: Pound): Pound = Pound(this.value - that.value)
   def * (that: Pound): Pound = Pound(this.value * that.value)
