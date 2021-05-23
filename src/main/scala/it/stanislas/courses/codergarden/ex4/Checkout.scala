@@ -6,9 +6,9 @@ object Checkout {
   val appleProductPrice = ProductPrice(Apple, Pound(0.6))
   val orangeProductPrice = ProductPrice(Orange, Pound(0.25))
 
-  val productsDataMap: Map[Product, ProductData] = HashMap(
-    Apple -> ProductData(appleProductPrice, TwoForOne(appleProductPrice)),
-    Orange -> ProductData(orangeProductPrice, TreeForTwo(orangeProductPrice))
+  val productPricesMap: Map[Product, ProductPrice] = HashMap(
+    Apple -> appleProductPrice,
+    Orange -> orangeProductPrice
   )
 
   val promotions: List[Promotion] = List(
@@ -16,18 +16,29 @@ object Checkout {
     TreeForTwo(orangeProductPrice)
   )
 
-  def calculateTotal(basket: List[Product]): Money =
-    basket match {
+  def calculateTotal(products: List[Product]): Money =
+    products match {
       case Nil => Pound(0)
-      case basket => {
-        val basketTotal = basket.foldLeft(BasketTotal())(accumulateTotal)
-        basketTotal.discountedTotal
+      case products => {
+        val basket = toBasket(products)
+        val discountedBasket =
+          promotions.foldLeft(basket)((b: Basket, p: Promotion) =>
+            p.applyDiscount(b)
+          )
+        discountedBasket.total
       }
     }
 
-  private def accumulateTotal(basketTotal: BasketTotal, item: Product) = {
-    val productData =
-      productsDataMap.getOrElse(item, ProductData(ProductPrice(item)))
-    basketTotal.addProduct(productData)
+  private def toBasket(products: List[Product]): Basket = {
+    val lines: Map[Product, Line] = products
+      .groupBy(identity)
+      .map {
+        case (k, v) =>
+          k -> Line(
+            productPricesMap.getOrElse(k, ProductPrice(NoProduct)),
+            v.size
+          )
+      }
+    Basket(lines)
   }
 }
