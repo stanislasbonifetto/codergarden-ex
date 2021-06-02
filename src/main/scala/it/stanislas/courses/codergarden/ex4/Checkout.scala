@@ -2,32 +2,16 @@ package it.stanislas.courses.codergarden.ex4
 
 import scala.collection.immutable.HashMap
 
-object Checkout {
-  val appleProductPrice = ProductPrice(Apple, Pound(0.6))
-  val orangeProductPrice = ProductPrice(Orange, Pound(0.25))
+class Checkout(
+    productPrices: Map[Product, ProductPrice],
+    promotions: List[Promotion]
+) {
+  private val basketEngine: BasketEngine = new BasketEngine(promotions)
 
-  val productPricesMap: Map[Product, ProductPrice] = HashMap(
-    Apple -> appleProductPrice,
-    Orange -> orangeProductPrice
-  )
+  def calculate(products: Product*): Basket = calculate(products.toList)
 
-  val promotions: List[Promotion] = List(
-    TwoForOne(appleProductPrice),
-    TreeForTwo(orangeProductPrice)
-  )
-
-  def calculateTotal(products: List[Product]): Money =
-    products match {
-      case Nil => Pound(0)
-      case products => {
-        val basket = toBasket(products)
-        val discountedBasket =
-          promotions.foldLeft(basket)((b: Basket, p: Promotion) =>
-            p.applyDiscount(b)
-          )
-        discountedBasket.total
-      }
-    }
+  def calculate(products: List[Product]): Basket =
+    basketEngine.calculate(toBasket(products))
 
   private def toBasket(products: List[Product]): Basket = {
     val lines: Map[Product, Line] = products
@@ -35,10 +19,35 @@ object Checkout {
       .map {
         case (k, v) =>
           k -> Line(
-            productPricesMap.getOrElse(k, ProductPrice(NoProduct)),
+            productPrices.getOrElse(k, ProductPrice(NoProduct)),
             v.size
           )
       }
     Basket(lines)
   }
+}
+
+object Checkout {
+  val appleProductPrice = ProductPrice(Apple, Pound(0.6))
+  val orangeProductPrice = ProductPrice(Orange, Pound(0.25))
+  val bananaProductPrice = ProductPrice(Banana, Pound(0.20))
+
+  val productPricesMap: Map[Product, ProductPrice] = HashMap(
+    Apple -> appleProductPrice,
+    Orange -> orangeProductPrice,
+    Banana -> bananaProductPrice
+  )
+
+  val promotions: List[Promotion] = List(
+    ProductBundlePromotion(Apple, Banana),
+    TwoForOne(Apple),
+    TwoForOne(Banana),
+    TreeForTwo(Orange),
+    PercentageDiscount(0.1)
+  )
+
+  def apply(
+      productPrices: Map[Product, ProductPrice],
+      promotions: List[Promotion]
+  ): Checkout = new Checkout(productPrices, promotions)
 }
