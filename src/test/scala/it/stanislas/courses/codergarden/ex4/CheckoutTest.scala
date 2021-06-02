@@ -22,6 +22,7 @@ class CheckoutTest extends AnyFreeSpec with Matchers {
       )
       "and list of promotions" - {
         val promotions: List[Promotion] = List(
+          ProductBundlePromotion(Apple, Banana),
           TwoForOne(Apple),
           TreeForTwo(Orange),
           TwoForOne(Banana)
@@ -39,7 +40,7 @@ class CheckoutTest extends AnyFreeSpec with Matchers {
               val basket = checkout.calculate(products)
               "then 1 Apple discount" in {
                 val discountsCount =
-                  basket.lines.get(apple).map(_.discounts.size).getOrElse(0)
+                  basket.lines.get(apple).map(_.discountedQuantity).getOrElse(0)
                 discountsCount should be(1)
               }
               "and total of " in {
@@ -70,7 +71,7 @@ class CheckoutTest extends AnyFreeSpec with Matchers {
               val basket = checkout.calculate(products)
               "Then 1 Apple discount" in {
                 val appleDiscount =
-                  basket.lines.get(apple).map(_.discounts.size).getOrElse(0)
+                  basket.lines.get(apple).map(_.discountedQuantity).getOrElse(0)
                 appleDiscount should be(1)
               }
               "and total of " in {
@@ -84,11 +85,94 @@ class CheckoutTest extends AnyFreeSpec with Matchers {
               val basket = checkout.calculate(products)
               "Then 1 Banana discount" in {
                 val bananaDiscount =
-                  basket.lines.get(banana).map(_.discounts.size).getOrElse(0)
+                  basket.lines
+                    .get(banana)
+                    .map(_.discountedQuantity)
+                    .getOrElse(0)
                 bananaDiscount should be(1)
               }
               "and total of " in {
                 basket.total should be(bananaProductPrice.price * 1)
+              }
+            }
+          }
+          "and basket with 2 Bananas and 1 Apple" - {
+            val products =
+              List(Product("Banana"), Product("Banana"), Product("Apple"))
+            "When calculate the basket" - {
+              val basket = checkout.calculate(products)
+              "Then 1 Banana discount as Bundle" in {
+                val bananaDiscount =
+                  basket.lines
+                    .get(banana)
+                    .map(_.discountedQuantity)
+                    .getOrElse(0)
+                bananaDiscount should be(1)
+              }
+              "and total of " in {
+                basket.total should be(
+                  bananaProductPrice.price * 1 + appleProductPrice.price * 1
+                )
+              }
+            }
+          }
+          "and basket with 2 Bananas and 2 Apple" - {
+            val products = List(
+              Product("Banana"),
+              Product("Banana"),
+              Product("Apple"),
+              Product("Apple")
+            )
+            "When calculate the basket" - {
+              val basket = checkout.calculate(products)
+              "Then 1 Banana discounted" in {
+                val bananaDiscount =
+                  basket.lines
+                    .get(banana)
+                    .map(_.discountedQuantity)
+                    .getOrElse(0)
+                bananaDiscount should be(2)
+              }
+              "Then 1 Apple discounted" in {
+                val appleDiscount =
+                  basket.lines.get(apple).map(_.discountedQuantity).getOrElse(0)
+                appleDiscount should be(1)
+              }
+              "and total of " in {
+                basket.total should be(
+                  bananaProductPrice.price * 0 + appleProductPrice.price * 1
+                )
+              }
+            }
+          }
+          "and basket with 2 Bananas and 4 Apple" - {
+            val products = List(
+              Product("Banana"),
+              Product("Banana"),
+              Product("Apple"),
+              Product("Apple"),
+              Product("Apple"),
+              Product("Apple")
+            )
+            "When calculate the basket" - {
+              val basket = checkout.calculate(products)
+              "Then 2 Banana discounted" in {
+                val bananaDiscount =
+                  basket.lines
+                    .get(banana)
+                    .map(_.discountedQuantity)
+                    .getOrElse(0)
+                bananaDiscount should be(2)
+              }
+              "Then 2 Apple discounted" in {
+                val appleDiscount =
+                  basket.lines.get(apple).map(_.discountedQuantity).getOrElse(0)
+                appleDiscount should be(2)
+              }
+              "and total of " in {
+                basket.total should be(
+                  bananaProductPrice.price * 0 + appleProductPrice.price * 2
+                )
               }
             }
           }

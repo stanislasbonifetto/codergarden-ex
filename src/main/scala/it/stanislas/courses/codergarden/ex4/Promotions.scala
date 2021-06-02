@@ -25,7 +25,7 @@ abstract class PromotionImpl extends Promotion {
       lines
   }
 
-  private def hasValidTotalAndQuantityDiscount(line: Line): Boolean =
+  protected def hasValidTotalAndQuantityDiscount(line: Line): Boolean =
     line.total.value >= 0 && line.quantity >= line.discountedQuantity
 
   def addDiscount(discount: Discount, line: Line): Option[Line] = {
@@ -62,7 +62,7 @@ abstract class ProductQuantityPromotion(product: Product)
       quantity: Int
   ): Option[Discount] = {
     val discountedQuantity = (quantity / discountQuantity) * freeQuantity
-    if (discountedQuantity % 1 == 0)
+    if (discountedQuantity > 0)
       Some(
         Discount(this, productPrice * discountedQuantity, discountedQuantity)
       )
@@ -92,20 +92,23 @@ case class ProductBundlePromotion(bundle: (Product, Product))
       .map {
         case (cheapest, expensive) =>
           val quantityToDiscount =
-            cheapest.remainQuantity - expensive.remainQuantity
-          val newLine = cheapest.copy(discounts =
-            Discount(
-              this,
-              cheapest.productPrice.price * quantityToDiscount,
-              quantityToDiscount
-            ) :: cheapest.discounts
-          )
-          if (
-            newLine.total.value >= 0 && newLine.quantity >= newLine.discountedQuantity
-          )
-            lines + (cheapest.productPrice.product -> newLine)
-          else
+            List(cheapest.remainQuantity, expensive.remainQuantity).min
+
+          if (quantityToDiscount > 0) {
+            val newLine = cheapest.copy(discounts =
+              Discount(
+                this,
+                cheapest.productPrice.price * quantityToDiscount,
+                quantityToDiscount
+              ) :: cheapest.discounts
+            )
+            if (hasValidTotalAndQuantityDiscount(newLine))
+              lines + (newLine.productPrice.product -> newLine)
+            else
+              lines
+          } else {
             lines
+          }
       }
       .getOrElse(lines)
   }

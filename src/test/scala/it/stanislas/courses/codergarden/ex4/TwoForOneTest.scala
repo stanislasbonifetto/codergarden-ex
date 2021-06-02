@@ -9,15 +9,15 @@ class TwoForOneTest extends AnyFreeSpec with Matchers {
     val product = Product("A")
     val promo = TwoForOne(product)
     "quantity 0" - {
-      "discount should be 0" in {
+      "should no discount" in {
         val maybeDiscount = promo.calculateDiscount(price, 0)
-        maybeDiscount should be(Some(Discount(promo, Pound(0), 0)))
+        maybeDiscount should be(None)
       }
     }
     "quantity 1" - {
-      "discount should be 0" in {
+      "should no discount" in {
         val maybeDiscount = promo.calculateDiscount(price, 1)
-        maybeDiscount should be(Some(Discount(promo, Pound(0), 0)))
+        maybeDiscount should be(None)
       }
     }
     "quantity 2" - {

@@ -9,21 +9,21 @@ class TreeForTwoTest extends AnyFreeSpec with Matchers {
     val product = Product("A")
     val promo = TreeForTwo(product)
     "quantity 0" - {
-      "discount should be 0" in {
+      "should no discount" in {
         val discount = promo.calculateDiscount(price, 0)
-        discount should be(Some(Discount(promo, Pound(0), 0)))
+        discount should be(None)
       }
     }
     "quantity 1" - {
-      "discount should be 0" in {
+      "should no discount" in {
         val discount = promo.calculateDiscount(price, 0)
-        discount should be(Some(Discount(promo, Pound(0), 0)))
+        discount should be(None)
       }
     }
     "quantity 2" - {
-      "discount should be 0" in {
+      "should no discount" in {
         val discount = promo.calculateDiscount(price, 2)
-        discount should be(Some(Discount(promo, Pound(0), 0)))
+        discount should be(None)
       }
     }
     "quantity 3" - {
